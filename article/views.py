@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from article.models import Article
 from datetime import datetime
+<<<<<<< HEAD
 from django.http import Http404
 from django.contrib.syndication.views import Feed   
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  #添加包
@@ -13,11 +14,22 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  #添�
 #    str = ("title = %s, category = %s, date_time = %s, content = %s" 
 #        % (post.title, post.category, post.date_time, post.content))
 #    return HttpResponse(str)
+=======
+
+# Create your views here.
+
+def detail(request, my_args):
+    post = Article.objects.all()[int(my_args)]
+    str = ("title = %s, category = %s, date_time = %s, content = %s" 
+        % (post.title, post.category, post.date_time, post.content))
+    return HttpResponse(str)
+>>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
 
 def home(request):
     post_list = Article.objects.all()  #获取全部的Article对象
     return render(request, 'home.html', {'post_list' : post_list})
 
+<<<<<<< HEAD
 def detail(request, id):
     try:
         post = Article.objects.get(id=str(id))
@@ -90,4 +102,6 @@ class RSSFeed(Feed) :
     def item_description(self, item):
         return item.content
 
+=======
+>>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
 

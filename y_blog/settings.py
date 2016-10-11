@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'article',
 ]
+<<<<<<< HEAD
 #from django.conf import global_settings
+=======
+from django.conf import global_settings
+>>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
 #TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
  #   'django.core.context_processors.request',
 #)

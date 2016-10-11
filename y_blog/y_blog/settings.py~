@@ -31,10 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< HEAD
     #'django-admin-tools',
-=======
->>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
     'bootstrap_admin',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,11 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'article',
 ]
-<<<<<<< HEAD
 #from django.conf import global_settings
-=======
-from django.conf import global_settings
->>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
 #TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
  #   'django.core.context_processors.request',
 #)
@@ -68,19 +61,12 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'y_blog.urls'
 
-<<<<<<< HEAD
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [TEMPLATE_PATH],
-=======
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
->>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

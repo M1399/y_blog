@@ -1,12 +1,10 @@
-<<<<<<< HEAD
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from django.http import HttpResponse
 from article.models import Article
 from datetime import datetime
 from django.http import Http404
-from django.contrib.syndication.views import Feed  
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  
+from django.contrib.syndication.views import Feed   
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger  #添加包
 # Create your views here.
 
@@ -92,19 +90,4 @@ class RSSFeed(Feed) :
     def item_description(self, item):
         return item.content
 
-=======
-from django.shortcuts import render
-from django.http import HttpResponse
-from article.models import Article
-
-# Create your views here.
-def home(request):
-    return HttpResponse("Hello World, Django")
-
-def detail(request, my_args):
-    post = Article.objects.all()[int(my_args)]
-    str = ("title = %s, category = %s, date_time = %s, content = %s" 
-        % (post.title, post.category, post.date_time, post.content))
-    return HttpResponse(str)
->>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
 
