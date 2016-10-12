@@ -1,7 +1,4 @@
-<<<<<<< HEAD
 
-=======
->>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
 # -*- coding: utf-8 -*-
 
 """y_blog URL Configuration
@@ -21,7 +18,6 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-<<<<<<< HEAD
 from article.views import home,detail,archives,about_me,search_tag,blog_search,RSSFeed
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
@@ -37,12 +33,4 @@ urlpatterns = [
    # url(r'^tag(?P<tag>\w+)/$', search_tag, name = 'search_tag'),
     url(r'^search/$',blog_search, name = 'search'),
     url(r'^Feed/$', RSSFeed(), name = "RSS"),
-=======
-
-urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    #url(r'^admin/', include(admin.site.urls)),  #可以使用设置好的url进入网站后台
-   # url(r'^$', 'article.views.home'),
-
->>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
 ]

@@ -1,5 +1,4 @@
 from django.contrib import admin
-<<<<<<< HEAD
 from article.models import Article,blog
 
 # Register your models here.
@@ -7,7 +6,3 @@ admin.site.register(blog)
 
 
 
-=======
-
-# Register your models here.
->>>>>>> 9ad492ca599a5059a8186f2e4ffabf56a851920c
