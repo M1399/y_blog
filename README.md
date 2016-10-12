@@ -1,8 +1,5 @@
 
 
-Overview
-
-
 
 Requirements
 
@@ -14,13 +11,14 @@ Requirements
 Install
 $ git clone https://github.com/M1399/blog_y
 
-$ cd my_blog_tutorial
+$ cd blog_y
 
 安装所有依赖
 	  Django==1.9.9 
 	  bootstrap-admin==0.3.3 
 
 $ python manage.py migrate
+$ python manage.py makemigrations
 $ python manage.py runserver
 
 
