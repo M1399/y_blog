@@ -1,5 +1,0 @@
-#忽略.pyc
-*.pyc
-*.py~
-*.md~
-*.gitignore~
