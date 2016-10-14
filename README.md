@@ -29,6 +29,5 @@ $ pip install markdown
 
 $ python manage.py migrate
 $ python manage.py makemigrations
-$ python manage.py runserver 0.0.0.0:9999
-```
+$ python manage.py runserver (必须用127.0.0.1:8000）
 
