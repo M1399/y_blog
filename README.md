@@ -15,7 +15,7 @@ source ./bin/activate
 #Install
 
 ```
-$ git clone https://github.com/M1399/y_blog
+$ git clone https://github.com/M1399/y_blog.git
 ```
 
 
