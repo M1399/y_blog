@@ -12,7 +12,7 @@ source ./bin/activate
 
 Install
 
-$ git clone https://github.com/M1399/blog_y
+$ git clone https://github.com/M1399/y_blog
 
 
 Usage
