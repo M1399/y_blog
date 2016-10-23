@@ -1,3 +1,4 @@
+
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -21,55 +22,20 @@
     <div id="templatemo_header">
            	<div id="templatemo_site_title">Y<span>BLOG</span></div>
 	</div>
-    
-    <div id="templatemo_menu">
-	<ul>
-            <li><a href="/" class="current">Home</a></li>
-            <li><a href="{% url "home" %}">Blog</a></li>
-            <li><a href="{% url "register" %}">register</a></li>
-	    <li><a href="{% url "login" %}">login</a></li>
-	    <li><a href="{% url "post_new" %}">新增</a></li>
-        </ul>    
-    </div>
 
     
 
     
 	<div id="templatemo_content">
-		<div>
-		<div id="templatemo_left_column">
-
-			<div class="templatemo_postbody">   
-					{% block content %}
-					    {% endblock %}			
-			</div>
-
-		</div>
-        
-		<div id="templatemo_right_column">
 			<div class="templatemo_section">
                 
-		        <form method="get"  action="/search/">
-		        	<label>Search</label> <input name="s" type="text" id="keyword" /> <br />
-		            <input type="submit" value="search" class="button" /> 
-		      	</form>
                    
-			</div>
-			
-			<div class="templatemo_section">
-            			<h2><a style="color:#F4E05B;" href="{% url "archives" %}">Archive</a></h2>
-			</div>
+			<form method = 'post' enctype="multipart/form-data" style="margin-left:37%;margin-top:10%;padding:5px 15px 36px 10px">
+				{{uf.as_p}}
+				<input type="submit" value = "注册" style="margin:auto;position:absolute;left:47%;" />
+			</form>
 
-                 	  
-			<div class="templatemo_section">            
-            			<h2><a style="color:#F4E05B;" href="{% url "RSS" %}">RSS</a></h2>
-			</div>
-            
-			<div class="templatemo_section">
-            			<h2><a style="color:#F4E05B;" href="{% url "about_me" %}">About Me</a></h2>
-            		</div>
-
-		</div>
+	
 		</div>
 	</div>
     
