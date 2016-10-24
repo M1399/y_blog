@@ -11,9 +11,12 @@ from django import forms
 from django.http import HttpResponse,HttpResponseRedirect
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
-from .forms import PostForm
+from .forms import PostForm,BlogCommentForm
 from article.models import Post
 import pdb
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import FormView
+from django.shortcuts import get_object_or_404
 
 class UserForm(forms.Form):
     username = forms.CharField(label='用户名',max_length=100)
@@ -39,6 +42,12 @@ def detail(request, id):
     except Article.DoesNotExist:
         raise Http404
     return render(request, 'post.html', {'post' : post})
+
+    def get_context_data(self, **kwargs): 
+        kwargs['comment_list'] = self.object.blogcomment_set.all() 
+        kwargs['form'] = BlogCommentForm() 
+        return super(ArticleDetailView, self).get_context_data(**kwargs) 
+
 
 def archives(request) :
     try:
@@ -169,8 +178,10 @@ def logout(req):
  #       fields = ('title', 'text',)
 
 def post_new(request):
+    form = PostForm()
     if request.method == "POST":
         form = PostForm(request.POST)
+
         if form.is_valid():
 
 	    title = form.cleaned_data['title']
@@ -179,16 +190,69 @@ def post_new(request):
 	    #text = form.cleaned_data['text']
             #将表单写入数据库
 	    #global Post
-	    pdb.set_trace()
-            post = Post
+	    #pdb.set_trace()
+            post = Article()
             post.title = title
             post.category = category
 	    post.content = content
 	    #post.text = text
 
-            Post = form.save(commit=False)
-            Post.save()
-            return redirect('detail', id=Post.id)
+            #Post = form.save(commit=False)
+            post.save()
+            return redirect('../')
     else:
         form = PostForm()
     return render(request, 'post_edit.html', {'form': form, 'is_new': True})
+
+
+
+class CommentPostView(FormView):
+    form_class = BlogCommentForm # 指定使用的是哪个form
+    template_name = 'post.html' #评论提交成功后跳转到原始提交页面
+
+    def form_valid(self, form):
+        """提交的数据验证合法后"""
+        # 首先根据 url 传入的参数（在 self.kwargs 中）获取到被评论的文章
+	
+        target_article = get_object_or_404(Article, pk=self.kwargs['article_id'])
+
+        # 调用ModelForm的save方法保存评论，设置commit=False则先不保存到数据库，
+        # 而是返回生成的comment实例，直到真正调用save方法时才保存到数据库。
+
+        comment = form.save(commit=False)
+
+        # 把评论和文章关联
+        comment.article = target_article
+        comment.save()
+
+        # 评论生成成功，重定向到被评论的文章页面，get_absolute_url 
+        self.success_url = target_article.get_absolute_url()
+        return HttpResponseRedirect(self.success_url)
+
+    def form_invalid(self, form):
+        """提交的数据验证不合法后的逻辑"""
+        target_article = get_object_or_404(Article, pk=self.kwargs['article_id'])
+
+        # 不保存评论，回到原来提交评论的文章详情页面
+        return render(self.request, 'post.html', {
+            'form': form,
+            'article': target_article,
+            'comment_list': target_article.blogcomment_set.all(),
+        })
+
+class ArticleDetailView(DetailView):
+    model = Article
+    template_name = "post.html"
+    context_object_name = "article"
+    pk_url_kwarg = 'article_id'
+
+    def get_object(self, queryset=None):
+        obj = super(ArticleDetailView, self).get_object()
+        obj.body = markdown2.markdown(obj.body, extras=['fenced-code-blocks'], )
+        return obj
+
+    # 新增 form 到 context
+    def get_context_data(self, **kwargs):
+        kwargs['comment_list'] = self.object.blogcomment_set.all()
+        kwargs['form'] = BlogCommentForm()
+        return super(ArticleDetailView, self).get_context_data(**kwargs)

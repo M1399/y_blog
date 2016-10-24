@@ -24,11 +24,9 @@
     
     <div id="templatemo_menu">
 	<ul>
-            <li><a href="/" class="current">Home</a></li>
-            <li><a href="{% url "home" %}">Blog</a></li>
+            <li><a href="{% url "home" %}">Home</a></li>
             <li><a href="{% url "register" %}">register</a></li>
-	    <li><a href="{% url "login" %}">login</a></li>
-	    <li><a href="{% url "post_new" %}">新增</a></li>
+	    <li><a href="{% url "post_new" %}">发帖</a></li>
         </ul>    
     </div>
 
@@ -74,7 +72,7 @@
 	</div>
     
 	<div id="templatemo_footer">
-        		<a href="{% url "home" %}">Home</a> | <a href="{% url "about_me" %}">About Me</a> |  <a href="https://github.com/M1399/blog_q">Githube</a> | <a href="http://weibo.com/u/5899508312/home?leftnav=1">Weibo</a>
+        		<a href="{% url "home" %}">Home</a> | <a href="{% url "about_me" %}">About Me</a> |  <a href="https://github.com/M1399/blog_q">Github</a> | <a href="http://weibo.com/u/5899508312/home?leftnav=1">Weibo</a>
 	</div>
 
 </div>

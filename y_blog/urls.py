@@ -18,8 +18,8 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from article.views import home,detail,archives,about_me,blog_search,RSSFeed
-from article.views import register,login,index,logout,post_new
+from article.views import home,detail,archives,about_me,blog_search,RSSFeed#,plun
+from article.views import register,login,index,logout,post_new,CommentPostView
 from django.views import static
 #from . import views
 
@@ -44,6 +44,9 @@ urlpatterns = [
     url(r'^index/$',index,name = 'index'),
     url(r'^logout/$',logout,name = 'logout'),
     url(r'^new/$', post_new, name='post_new'),
+    #url(r'^plun/$', plun, name='plun'),
+
+    url(r'^article/(?P<article_id>\d+)/comment/$', CommentPostView.as_view(), name='comment'),
 
     url(r'^$', home, name='home'),
     url(r'^(?P<id>\d+)/$', detail, name='detail'),

@@ -5,15 +5,21 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib import admin
 # Create your models here.
+
 class Article(models.Model) :
+    STATUS_CHOICES = (
+        ('d', 'Draft'),
+        ('p', 'Published'),
+    )
+
     title = models.CharField(max_length = 100)  #博客题目
     category = models.CharField(max_length = 50, blank = True)  #博客标签
     date_time = models.DateTimeField(auto_now_add = True)  #博客日期
     content = models.TextField(blank = True, null = True)  #博客文章正文
     
-    def get_absolute_url(self):
-        path = reverse('detail', kwargs={'id':self.id})
-        return "http://127.0.0.1:8000%s" % path
+    #def get_absolute_url(self):
+     #   path = reverse('detail', kwargs={'id':self.id})
+      #  return "http://127.0.0.1:8000%s" % path
    
 
     #python3请使用__str__
@@ -23,6 +29,9 @@ class Article(models.Model) :
     class Meta:  #按时间下降排序
         ordering = ['-date_time']
 
+    def get_absolute_url(self):
+	#解析detail视图函数对应的url
+        return reverse('detail', kwargs={'id': self.pk})
 
 class User(models.Model):
     username = models.CharField(max_length=100)
@@ -48,36 +57,17 @@ class Category(models.Model):
  
      def __str__(self): 
          return self.name 
- 
-class Postjh(models.Model):
-    class Meta:
-        app_label = 'blog'
-        verbose_name = '文章'
-        verbose_name_plural = '文章'
-
-    # 作者
-   # author = models.ForeignKey(User)
-    # 标题
-    title = models.CharField(max_length=200)
-    # 正文
-    text = models.TextField()
-    # 标签
-    #tags = models.ManyToManyField(Tag)
-    # 分类目录
-    #category = models.ForeignKey(Category)
-    # 点击量
-    #click = models.IntegerField(default=0)
-    # 创建时间
-    #created_date = models.DateTimeField(default=timezone.now)
-    # 发布时间
-    #published_date = models.DateTimeField(blank=True, null=True)
-
-    def publish(self):
-        self.published_date = timezone.now()
-        self.save()
+#评论
+class BlogComment(models.Model):
+    user_name = models.CharField('评论者名字', max_length=100)
+    user_email = models.EmailField('评论者邮箱', max_length=255)
+    body = models.TextField('评论内容')
+    created_time = models.DateTimeField('评论发表时间', auto_now_add=True)
+    article = models.ForeignKey('Article', verbose_name='评论所属文章', on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
+        return self.body[:20]
+ 
  
  
 class Post(models.Model) :
@@ -87,8 +77,7 @@ class Post(models.Model) :
     content = models.TextField(blank = True, null = True)  #博客文章正文
     
     def get_absolute_url(self):
-        path = reverse('detail', kwargs={'id':self.id})
-        return "http://127.0.0.1:8000%s" % path
+        return reverse('detail', kwargs={'id': self.pk})
  
     #python3请使用__str__
     def __str__(self) :
