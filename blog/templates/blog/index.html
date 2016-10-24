@@ -1,0 +1,21 @@
+<h1>博客首页</h1>
+<p>（登陆+注册）/登出</p>
+<p><a href="/blog/addArticle">发帖</a></p>
+<section>
+	{% if latest_article_list %}
+	    <ul>
+	    {% for article in latest_article_list %}
+	        <li>
+	        	<a href="/blog/{{ article.id }}/">
+	        		{{ article.article_title }}
+	        		<br/>
+	        		内容：{{ article.article_text }}
+	        	</a>
+	        	<a href="/blog/{{ article.id }}/del">删除</a>
+	        </li>
+	    {% endfor %}
+	    </ul>
+	{% else %}
+	    <p>No blog are available.</p>
+	{% endif %}
+</section>
