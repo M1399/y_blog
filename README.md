@@ -2,7 +2,7 @@
 
 - Python2.7
 - Django1.9.9 
-- Bootstrap3.3.0  #非必要
+- Bootstrap3.3.0  # 非必要
 - virtualenv 1.11.6
 
 ```
