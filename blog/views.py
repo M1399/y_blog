@@ -7,12 +7,16 @@ from django.template import loader
 
 from .models import Article, Comment, User
 
+import pdb
+
 
 def index(request):
+    username = request.session.get('username', 'visitor')
     latest_article_list = Article.objects.order_by('-pub_date')[:5]
     template = loader.get_template('blog/index.html')
     context = {
         'latest_article_list': latest_article_list,
+        'user': username
     }
     return HttpResponse(template.render(context, request))
 
@@ -73,7 +77,7 @@ def login(request):
             else:
                 # 传递给session
                 request.session['username'] = username
-                return HttpResponseRedirect('/changePassword/')
+                return HttpResponseRedirect('/blog')
         else:
             return render(request, 'blog/login.html', {'uf':form})
     else:
@@ -83,8 +87,8 @@ def login(request):
 
 #按登陆之后跳转到的页面
 def changePassword(request):
-    username = request.session.get('username', 'anybody')
-    if(username == 'anybody'):
+    username = request.session.get('username', 'visitor')
+    if(username == 'visitor'):
         return HttpResponse('not logged on')
     # 当提交表单时
     if request.method == 'POST':
