@@ -22,6 +22,7 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
+# 添加博客文章
 class ArticleFormForAddArticle(forms.Form):
     article_title = forms.CharField(max_length=200)
     article_text = forms.CharField(max_length=200)
@@ -47,21 +48,36 @@ def addArticle(request):
         form = ArticleFormForAddArticle()
     return render(request, 'blog/addArticle.html', {'uf':form})
 
-# 博文详细内容
+
+# 评论相关的表单
+class CommentForm(forms.Form):
+    comment_text = forms.CharField(max_length=200)
+
+
+# 博文详细内容及评论/添加评论的表单
 def showArticle(request, article_id):
     article = Article.objects.get(id=article_id)
-    return render(request, 'blog/showArticle.html', {'article':article})
+    comment_all = Comment.objects.filter(article=article)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if not request.session.get('username'):
+            return HttpResponseRedirect('/login') 
+        if form.is_valid():
+            commentSQL = Comment()
+            commentSQL.article = article
+            commentSQL.comment_text = form.cleaned_data['comment_text']
+            commentSQL.comment_author = request.session.get('username')
+            commentSQL.save()
+    else:
+        form = CommentForm()
+    return render(request, 'blog/showArticle.html', {'uf':form, 'article':article, 'comment_all':comment_all})
+
 
 # 删除博文
 def delArticle(request, article_id):
     # TODO del 
     Article.objects.get(id=article_id).delete()
     return HttpResponseRedirect('/blog')
-
-
-# 评论相关的
-def addComment(request):
-	pass
 
 
 # 登陆相关的表单
@@ -103,6 +119,7 @@ def login(request):
         uf = UserForm()
     return render(request, 'blog/login.html', {'uf':uf})
 
+
 # 注册
 def register(request):
     if request.method == 'POST':
@@ -126,6 +143,7 @@ def register(request):
     else:
         uf = UserFormForRegister()
     return render(request,'blog/register.html', {'uf':uf})
+
 
 # 修改密码
 def changePassword(request):
@@ -157,6 +175,7 @@ def changePassword(request):
     else:
         uf = UserFormForChange()
     return render(request,'blog/changePassword.html', {'username':username, 'uf':uf})
+
 
 # 登出
 def logout(request):
