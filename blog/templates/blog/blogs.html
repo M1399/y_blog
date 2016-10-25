@@ -1,0 +1,13 @@
+{% for article in article_list %}
+<a href="/blog/{{ article.id }}/">
+	<h3 class="title2">{{ article.article_title }}</h3>
+	<div class="content">
+		<p>内容：{{ article.article_text }}</p>
+	</div>
+</a>
+{% if user = article.author %}
+<a href="/blog/{{ article.id }}/dels">删除</a>
+{% endif %}
+<br/><br/>
+{% endfor %}
+<a href="/">返回</a>

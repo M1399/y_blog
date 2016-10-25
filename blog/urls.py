@@ -5,8 +5,10 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^blog$', views.index, name='index'),
+    url(r'^blogs$', views.blogs, name='blogs'),
     url(r'^blog/(?P<article_id>[0-9]+)/$', views.showArticle, name='showArticle'),
     url(r'^blog/(?P<article_id>[0-9]+)/del$', views.delArticle, name='delArticle'),
+    url(r'^blog/(?P<article_id>[0-9]+)/dels$', views.delArticles, name='delArticles'),
     url(r'^blog/addArticle/', views.addArticle, name='addArticle'),
     # url(r'^login/', views.login, name='login'),
     # url(r'^register/', views.register, name='register'),

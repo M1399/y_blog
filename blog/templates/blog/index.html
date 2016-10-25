@@ -54,7 +54,13 @@
 										{% if user = article.author %}
 											<a href="/blog/{{ article.id }}/del">删除</a>
 										{% endif %}
+										<br/><br/>
 									    {% endfor %}
+									    {% if article_nums > 3 %}
+									    <p>
+									    	<a href="/blogs"><超过三条，点击查看更多></a>
+									    </p>
+									    {% endif %}
 									{% else %}
 									    <p>No blog are available.</p>
 									{% endif %}

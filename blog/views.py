@@ -13,10 +13,24 @@ import pdb
 # 首页
 def index(request):
     username = request.session.get('username', 'visitor')
-    latest_article_list = Article.objects.order_by('-pub_date')[:5]
+    article_nums = Article.objects.count()
+    latest_article_list = Article.objects.order_by('-pub_date')[:3]
     template = loader.get_template('blog/index.html')
     context = {
         'latest_article_list': latest_article_list,
+        'user': username,
+        'article_nums': article_nums
+    }
+    return HttpResponse(template.render(context, request))
+
+
+# 查看全部博客
+def blogs(request):
+    username = request.session.get('username')
+    article_list = Article.objects.order_by('-pub_date')
+    template = loader.get_template('blog/blogs.html')
+    context = {
+        'article_list': article_list,
         'user': username
     }
     return HttpResponse(template.render(context, request))
@@ -75,9 +89,15 @@ def showArticle(request, article_id):
 
 # 删除博文
 def delArticle(request, article_id):
-    # TODO del 
+    # TODO 权限判断
     Article.objects.get(id=article_id).delete()
     return HttpResponseRedirect('/blog')
+
+
+def delArticles(request, article_id):
+    # TODO 权限判断
+    Article.objects.get(id=article_id).delete()
+    return HttpResponseRedirect('/blogs')
 
 
 # 登陆相关的表单
