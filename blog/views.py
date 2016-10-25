@@ -1,5 +1,8 @@
+# -*- coding: utf-8 -*-
+
+from django import forms
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.template import loader
 
 from .models import Article, Comment, User
@@ -39,3 +42,82 @@ def delArticle(request, article_id):
 
 def addComment(request):
 	pass
+
+# 登陆相关
+class UserForm(forms.Form):
+    username = forms.CharField(max_length=200)
+    password = forms.CharField(max_length=200)
+
+
+class UserFormForChange(forms.Form):
+    password = forms.CharField(max_length=200)
+    newPassword = forms.CharField(max_length=200)
+    newPasswordAgain = forms.CharField(max_length=200)   
+
+
+def login(request):
+    # 当提交表单时
+    if request.method == 'POST':
+        # form 包含提交的数据
+        form = UserForm(request.POST)
+        # 如果提交的数据合法
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']           
+            # 验证
+            try:
+                userSQL = User.objects.get(username=username, password=password) 
+            except User.DoesNotExist:
+                error = '用户名或密码错误'
+                return render(request, 'blog/login.html', {'error':error}) 
+            else:
+                # 传递给session
+                request.session['username'] = username
+                return HttpResponseRedirect('/changePassword/')
+        else:
+            return render(request, 'blog/login.html', {'uf':form})
+    else:
+        uf = UserForm()
+    return render(request, 'blog/login.html', {'uf':uf})
+
+
+#按登陆之后跳转到的页面
+def changePassword(request):
+    username = request.session.get('username', 'anybody')
+    if(username == 'anybody'):
+        return HttpResponse('not logged on')
+    # 当提交表单时
+    if request.method == 'POST':
+        # form 包含提交的数据
+        form = UserFormForChange(request.POST)
+        # 如果提交的数据合法
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            newPassword = form.cleaned_data['newPassword']
+            newPasswordAgain = form.cleaned_data['newPasswordAgain']
+            # 验证
+            try:
+                userSQL = User.objects.get(username=username, password=password)
+            except User.DoesNotExist:
+                error = '密码错误'
+                return render(request, 'blog/changePassword.html', {'error':error})
+            else:
+                if newPassword == newPasswordAgain:
+                    userSQL.password = newPassword
+                    userSQL.save()
+                    ok = '修改密码成功'
+                    return render(request, 'blog/changePassword.html', {'ok':ok})
+                else:
+                    error = '两次密码输入不相同'
+                    return render(request, 'blog/changePassword.html', {'error':error})
+        else:
+            return render(request, 'blog/changePassword.html', {'uf':form})
+    else:
+        uf = UserFormForChange()
+    return render(request,'blog/changePassword.html', {'username':username, 'uf':uf})
+    #return render(request, 'changePassword.html', locals())
+
+
+def logout(request):
+    del request.session['username']
+    return HttpResponse('logout ok!')
