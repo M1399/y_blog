@@ -1,5 +1,12 @@
-<h1>article_title</h1>
-<p>article_text</p>
-
-
-<div>comment</div>
+<header>
+    <h1>{{ article.article_title }}</h1>
+</header>
+<section>
+    <div>
+    作者：{{ article.author }}
+    内容：{{ article.article_text }}
+    创建时间：{{ article.pub_date}}
+    </div>
+    <a href="/">返回首页</a>
+    <div>comment</div>
+</section>

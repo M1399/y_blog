@@ -49,8 +49,8 @@ def addArticle(request):
 
 # 博文详细内容
 def showArticle(request, article_id):
-    response = "You're looking at the results of article %s."
-    return HttpResponse(response % article_id)
+    article = Article.objects.get(id=article_id)
+    return render(request, 'blog/showArticle.html', {'article':article})
 
 # 删除博文
 def delArticle(request, article_id):
