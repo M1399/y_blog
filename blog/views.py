@@ -53,6 +53,12 @@ class UserForm(forms.Form):
     password = forms.CharField(max_length=200)
 
 
+class UserFormForRegister(forms.Form):
+    username = forms.CharField(max_length=200)
+    password = forms.CharField(max_length=200)
+    passwordAgain = forms.CharField(max_length=200)   
+
+
 class UserFormForChange(forms.Form):
     password = forms.CharField(max_length=200)
     newPassword = forms.CharField(max_length=200)
@@ -85,7 +91,35 @@ def login(request):
     return render(request, 'blog/login.html', {'uf':uf})
 
 
-#按登陆之后跳转到的页面
+# 注册页面
+def register(request):
+    # 当提交表单时
+    if request.method == 'POST':
+        # form 包含提交的数据
+        form = UserFormForRegister(request.POST)
+        # 如果提交的数据合法
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            passwordAgain = form.cleaned_data['passwordAgain']
+            if password == passwordAgain:
+                userSQL = User()
+                userSQL.username = username
+                userSQL.password = password
+                userSQL.save()
+                ok = '注册成功'
+                return render(request, 'blog/register.html', {'ok':ok})
+            else:
+                error = '两次密码输入不相同'
+                return render(request, 'blog/register.html', {'error':error})
+        else:
+            return render(request, 'blog/register.html', {'uf':form})
+    else:
+        uf = UserFormForRegister()
+    return render(request,'blog/register.html', {'uf':uf})
+
+
+# 按登陆之后跳转到的页面
 def changePassword(request):
     username = request.session.get('username', 'visitor')
     if(username == 'visitor'):
@@ -119,7 +153,6 @@ def changePassword(request):
     else:
         uf = UserFormForChange()
     return render(request,'blog/changePassword.html', {'username':username, 'uf':uf})
-    #return render(request, 'changePassword.html', locals())
 
 
 def logout(request):

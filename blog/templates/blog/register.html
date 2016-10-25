@@ -1,0 +1,28 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>注册页</title>
+</head>
+<body>
+    <header>	
+        <h1>注册页</h1>
+    </header>
+    <section>
+        <form action="" method="post" id="UserFormForRegister">
+            用户名：
+            <input type="text" name="username" id="username">
+            <br/><br/>
+            密码：
+            <input type="password" name="password" id="password">
+            <br/><br/>
+            再次输入密码：
+            <input type="password" name="passwordAgain" id="passwordAgain">
+            <br/><br/>
+            {{ok}}{{error}}<br/>
+            {{uf.errors}}<br/>
+            <button class="btn1" id="btn1" type="submit">确定</button>
+            <a href="/">返回</a>
+        </form>
+    </section>
+</body>
+</html>					
