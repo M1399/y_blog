@@ -1,10 +1,16 @@
-<h1>新增博文</p1>
+<header>
+	<h1>新增博文</h1>
+</header>
 <section>
-	<form method="POST">
-		<span><h5>文章标题:</h5><input type="text" name="article_title"></span>
-		<span><h5>文章内容:</h5><input type="text" name="article_text"></span>
-		<span><h5>文章作者:</h5><input type="text" name="author"></span>
-		<br/>
-		<input type="submit" name="add">
-	</form>
+    <form action="" method="post" id="ArticleFormForAddArticle">
+        文章标题：
+        <input type="text" name="article_title" id="article_title">
+        <br/><br/>
+        文章内容：
+        <textarea name="article_text" id="article_text" rows="20" cols="30"></textarea>
+        <br/><br/>
+        {{uf.errors}}<br/>
+        <button type="submit">添加</button>
+        <a href="/">返回</a>
+    </form>
 </section>
