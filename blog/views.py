@@ -55,13 +55,11 @@ def showArticle(request, article_id):
 # 删除博文
 def delArticle(request, article_id):
     # TODO del 
-    latest_article_list = Article.objects.order_by('-pub_date')[:5]
-    template = loader.get_template('blog/index.html')
-    context = {
-        'latest_article_list': latest_article_list,
-    }
-    return HttpResponse(template.render(context, request))
+    Article.objects.get(id=article_id).delete()
+    return HttpResponseRedirect('/blog')
 
+
+# 评论相关的
 def addComment(request):
 	pass
 
