@@ -1,28 +1,33 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../static/css/style.css">
     <title>注册页</title>
 </head>
 <body>
-    <header>	
-        <h1>注册页</h1>
-    </header>
+    <header>
+    </header>	
     <section>
-        <form action="" method="post" id="UserFormForRegister">
-            用户名：
-            <input type="text" name="username" id="username">
-            <br/><br/>
-            密码：
-            <input type="password" name="password" id="password">
-            <br/><br/>
-            再次输入密码：
-            <input type="password" name="passwordAgain" id="passwordAgain">
-            <br/><br/>
-            {{ok}}{{error}}<br/>
-            {{uf.errors}}<br/>
-            <button class="btn1" id="btn1" type="submit">确定</button>
-            <a href="/">返回</a>
-        </form>
+	<div id="comment" style="position:absolute;left:27%;top:25%;">
+	    <h3>注册</h3>
+		<form id="contact-form" method="post">
+		    <fieldset>
+				用户名:
+				<input name="username" value="" type="text" id="username" placeholder="请输入用户名..." autofocus/>
+				密码:
+				<input name="password" value="" type="password" id="password" placeholder="请输入密码..."/>
+				请再次输入密码:
+				<input name="passwordAgain" value="" type="password" id="passwordAgain" placeholder="再次输入密码..."/>
+				{{ ok }}{{ error }}
+				{{ uf.errors }}
+			 	<div class="buttons">
+					<button class="btn1" type="submit">确定</button>
+					<a href="/">返回</a>
+			 	</div>
+			</fieldset>
+		</form>
+	</div>
     </section>
 </body>
-</html>					
+</html>	
+

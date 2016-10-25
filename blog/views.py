@@ -160,18 +160,20 @@ def changePassword(request):
                 userSQL = User.objects.get(username=username, password=password)
             except User.DoesNotExist:
                 error = '密码错误'
-                return render(request, 'blog/changePassword.html', {'error':error})
+                return render(request, 'blog/changePassword.html', {'username':username, 'info':error})
             else:
                 if newPassword == newPasswordAgain:
-                    userSQL.password = newPassword
-                    userSQL.save()
-                    ok = '修改密码成功'
-                    return render(request, 'blog/changePassword.html', {'ok':ok})
+                    if password != newPassword:
+                        userSQL.password = newPassword
+                        userSQL.save()
+                        info = '修改密码成功'
+                    else:
+                        info = '输入的密码和原密码一致'
                 else:
-                    error = '两次密码输入不相同'
-                    return render(request, 'blog/changePassword.html', {'error':error})
+                    info = '两次密码输入不相同'
+                return render(request, 'blog/changePassword.html', {'username':username, 'info':info})
         else:
-            return render(request, 'blog/changePassword.html', {'uf':form})
+            return render(request, 'blog/changePassword.html', {'username':username, 'uf':form})
     else:
         uf = UserFormForChange()
     return render(request,'blog/changePassword.html', {'username':username, 'uf':uf})
@@ -181,4 +183,4 @@ def changePassword(request):
 def logout(request):
     if request.session.get('username'):
         del request.session['username']
-    return HttpResponse('logout ok!')
+    return render(request, 'blog/logout.html')

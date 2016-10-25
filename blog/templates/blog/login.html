@@ -1,25 +1,30 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="../../static/css/style.css">
     <title>登陆页</title>
 </head>
 <body>
     <header>
-    <h1>登录页<h1>
-    </header>
+    </header>	
     <section>
-        <form method="post" id="UserForm">
-        用户：
-        <input type="text" name="username" id="username" value="" placeholder="请输入用户名..." autofocus>
-        <br/><br/>
-        密码：
-        <input type="password" name="password" id="password" value="" placeholder="请输入密码...">
-        <br/><br/>
-        {{uf.errors}}{{error}}
-        <br/>
-        <button class="btn1" id="btn1" type="submit">登录</button>
-        <a href="/">返回</a>
-        </form>
+		<div id="comment" style="position:absolute;left:27%;top:25%;">
+		    <h3>login</h3>
+			<form id="contact-form" method="post">
+			    <fieldset>
+					用户名:
+					<input name="username" value="" type="text" id="username" placeholder="请输入用户名..." autofocus/>
+					密码:
+					<input name="password" value="" type="password" id="password" placeholder="请输入密码..."/>
+					{{uf.errors}}{{error}}		
+				 	<div class="buttons">
+						<button class="btn1" type="submit">登录</button>		
+						<a href="/">返回</a>						
+				 	</div>
+				</fieldset> 	          
+			</form>								
+		</div>		        
     </section>
 </body>
-</html>					
+</html>	
+
