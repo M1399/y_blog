@@ -107,8 +107,8 @@ def register(request):
                 userSQL.username = username
                 userSQL.password = password
                 userSQL.save()
-                ok = '注册成功'
-                return render(request, 'blog/register.html', {'ok':ok})
+                request.session['username'] = username
+                return HttpResponseRedirect('/blog')
             else:
                 error = '两次密码输入不相同'
                 return render(request, 'blog/register.html', {'error':error})
@@ -156,5 +156,6 @@ def changePassword(request):
 
 
 def logout(request):
-    del request.session['username']
+    if request.session.get('username'):
+        del request.session['username']
     return HttpResponse('logout ok!')
