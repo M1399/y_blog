@@ -1,2 +1,83 @@
-<h1>注销成功</h1>
-<a href="/">返回</a>
+<!DOCTYPE html>
+<head>
+
+	<meta charset="utf-8">
+	<title>Y_BLOG</title>
+  	<link rel="stylesheet" href="../../static/css/zerogrid.css">
+	<link rel="stylesheet" href="../../static/css/style.css">    
+</head>
+<body>
+<div class="wrap-body">
+<header>
+	<div class="wrap-header zerogrid">	
+		<nav>
+			<div class="wrap-nav" style="">
+				<div class="menu">
+					<ul>
+				        {% if user == 'visitor' %}
+						<li><a href="login">登陆</a></li>
+						<li><a href="register">注册</a></li>
+					{% else %}
+						<li><a href="logout">登出</a></li>
+						<li><a href="changePassword">修改密码</a></li>
+						<li><a href="/blog/addArticle">发帖</a></li>
+					{% endif %}
+					    <li><a href="/">Home</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</div>
+</header>
+<section id="content">
+	<div style="" class="wrap-content zerogrid">
+		<div class="row block">
+			<div id="main-content" class="">
+				<div class="row">
+					<div class="col-full">
+						<div class="wrap-col">
+							<article>	
+								<div class="heading"><h1 class="title">注销成功</h1></div>
+																						
+								<div id="comment" style="height:250px;">
+									<a href="/">返回</a>
+								</div>
+							</article>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<footer>
+	<div class="wrap-footer zerogrid">
+		<div class="row">
+			<div class="col-1-4">
+				<div class="wrap-col">
+					<div class="box"><h4 class="title"><a href="#">About Me</a></h4></div>
+				</div>
+			</div>
+			<div class="col-1-4">
+				<div class="wrap-col">
+					<div class="box"><h4 class="title"><a href="/" class="current">Home</a></h4></div>
+				</div>
+			</div>
+			<div class="col-1-4">
+				<div class="wrap-col">
+					<div class="heading"><h4 class="title"><a href="http://weibo.com/u/5899508312/home?leftnav=1">微博</a></h4></div>
+				</div>
+			</div>
+			<div class="col-1-4">
+				<div class="wrap-col">
+					<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">Githube</a></h4></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="copyright">
+	</div>
+</footer>
+</div>
+</body>
+</html>	

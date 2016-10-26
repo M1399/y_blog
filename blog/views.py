@@ -14,7 +14,7 @@ import pdb
 def index(request):
     username = request.session.get('username', 'visitor')
     article_nums = Article.objects.count()
-    latest_article_list = Article.objects.order_by('-pub_date')[:3]
+    latest_article_list = Article.objects.order_by('-pub_date')[:2]
     template = loader.get_template('blog/index.html')
     context = {
         'latest_article_list': latest_article_list,
@@ -204,3 +204,8 @@ def logout(request):
     if request.session.get('username'):
         del request.session['username']
     return render(request, 'blog/logout.html')
+
+#aboutme
+def about_me(request) :
+    return render(request, 'blog/aboutme.html')
+

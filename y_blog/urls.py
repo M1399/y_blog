@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^logout/$', 'blog.views.logout'),
     url(r'', include('blog.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^aboutme/$', 'blog.views.about_me', name = 'about_me'),
+
 ]

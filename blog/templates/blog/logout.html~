@@ -32,51 +32,18 @@
 <section id="content">
 	<div style="" class="wrap-content zerogrid">
 		<div class="row block">
-			<div id="main-content" class="col-2-3">
+			<div id="main-content" class="">
 				<div class="row">
 					<div class="col-full">
 						<div class="wrap-col">
-							<aricle>
-
-								<div class="heading"><h1 class="title">全部博文</h1></div>
-															
-								<div id="comment">
-								<section>
-
-									{% for article in article_list %}
-									<a href="/blog/{{ article.id }}/">
-										<h3 class="title2">{{ article.article_title }}</h3>
-									</a>
-									{% if user = article.author %}
-									<a href="/blog/{{ article.id }}/dels">删除</a>
-									{% endif %}
-									<br/><br/>
-									{% endfor %}
+							<article>	
+								<div class="heading"><h1 class="title">注销成功</h1></div>
+																						
+								<div id="comment" style="height:150px;">
 									<a href="/">返回</a>
-								</section>
 								</div>
 							</article>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div id="sidebar" class="col-1-3">
-				<div class="wrap-col">
-
-					<div class="box">
-						<div class="heading"><h4 class="title"><a href="/blogs">归档</a></h4></div>
-					</div>
-					<div class="box">
-						<div class="heading"><h4 class="title"><a href="{% url "about_me" %}">About Me</a></h4></div>
-					</div>
-					<div class="box">
-						<div class="heading"><h4 class="title"><a href="http://weibo.com/u/5899508312/home?leftnav=1">微博</a></h4></div>
-					</div>
-					<div class="box">
-						<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">Githube</a></h4></div>
-					</div>
-					<div class="box">
-						<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">开发中</a></h4></div>
 					</div>
 				</div>
 			</div>
