@@ -1,0 +1,32 @@
+<!-- 首页的文章部分拆分到此处，便于 ajax 请求 -->
+<!-- 此处需补充分页 -->
+							<article>
+								<div class="heading">
+									<h1 class="title">
+										<a href="#">Y_blog</a>
+									</h1>
+								</div>
+								<div id="comment">
+									{% if latest_article_list %}   
+									    {% for article in latest_article_list %}
+										<a href="/blog/{{ article.id }}/">
+											<h3 class="title2">{{ article.article_title }}</h3>
+											<div class="content">
+												<p>内容：{{ article.article_text }}</p>
+											</div>
+										</a>
+										{% if user = article.author %}
+											<a href="/blog/{{ article.id }}/del">删除</a>
+										{% endif %}
+										<br/><br/>
+									    {% endfor %}
+									    {% if article_nums > 3 %}
+									    <p>
+									    	<a href="/blogs"><点击查看更多></a>
+									    </p>
+									    {% endif %}
+									{% else %}
+									    <p>No blog are available.</p>
+									{% endif %}
+								</div>
+							</article>
