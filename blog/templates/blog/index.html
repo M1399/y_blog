@@ -3,9 +3,21 @@
 	<meta charset="utf-8">
 	<title>Y_BLOG</title>
   	<link rel="stylesheet" href="../../static/css/zerogrid.css">
-	<link rel="stylesheet" href="../../static/css/style.css">    
+	<link rel="stylesheet" href="../../static/css/style.css">  
+	<style type="text/css">
+		#send_article {display: none;}
+	</style>
+	<script type="text/javascript" src="../../static/js/jquery-2.1.4.min.js" ></script>
 </head>
 <body>
+<div id="send_article">
+	<input type="text" name="article_header" id="article_header" placeholder="请输入标题..." autofocus="" />
+	<textarea id="article_content" placeholder="请输入内容..." ></textarea>
+	<div>
+		<button id='article_cancel' >cancel</button>
+		<button id='article_submit' >submit</button>
+	</div>
+</div>
 <div class="wrap-body">
 <header>
 	<div class="wrap-header zerogrid">	
@@ -19,7 +31,7 @@
 						{% else %}
 						<li><a href="logout">注销</a></li>
 						<li><a href="changePassword">修改密码</a></li>
-						<li><a href="/blog/addArticle">发帖</a></li>
+						<li id="sendButton">发帖</li>
 						{% endif %}
 					    <li><a href="/">Home</a></li>
 					</ul>
@@ -36,38 +48,15 @@
 				<div class="row">
 					<div class="col-full">
 						<div class="wrap-col">
-							<!-- 待拆分部分 -->
-							<article>
+							<article >
 								<div class="heading">
 									<h1 class="title">
 										<a href="#">Y_blog</a>
 									</h1>
 								</div>
 								<div id="comment">
-									{% if latest_article_list %}   
-									    {% for article in latest_article_list %}
-										<a href="/blog/{{ article.id }}/">
-											<h3 class="title2">{{ article.article_title }}</h3>
-											<div class="content">
-												<p>内容：{{ article.article_text }}</p>
-											</div>
-										</a>
-										{% if user = article.author %}
-											<a href="/blog/{{ article.id }}/del">删除</a>
-										{% endif %}
-										<br/><br/>
-									    {% endfor %}
-									    {% if article_nums > 3 %}
-									    <p>
-									    	<a href="/blogs"><点击查看更多></a>
-									    </p>
-									    {% endif %}
-									{% else %}
-									    <p>No blog are available.</p>
-									{% endif %}
 								</div>
-							</article>
-							<!-- 待拆分部分 拆分到 article.html -->						
+							</article>				
 						</div>
 					</div>
 				</div>
@@ -85,7 +74,7 @@
 						<div class="heading"><h4 class="title"><a href="http://weibo.com/u/5899508312/home?leftnav=1">微博</a></h4></div>
 					</div>
 					<div class="box">
-						<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">Githube</a></h4></div>
+						<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">Github</a></h4></div>
 					</div>
 					<div class="box">
 						<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">开发中</a></h4></div>
@@ -126,3 +115,76 @@
 </div>
 </body>
 </html>	
+<script>
+
+	var submit = $('#article_submit');
+	var cancel = $('#article_cancel');
+	var sendArticle = $('#send_article');
+
+	$("#sendButton").click(function() {sendArticle.css('display', 'flex')});
+
+	submit.click(function () {
+		var header = $('#article_header').val();
+		var content = $('#article_content').val();
+		if (!header || !content) {
+			alert('表单输入不完整');
+			return ;
+		}
+		$.ajax({
+			url: '/blog/addArticleByAjax',
+			method: 'post',
+			data: {
+				article_title: header,
+				article_text: content
+			},
+			success: function (data) {
+				console.log(data);
+					$.ajax({
+						url: '/blogsByAjax',
+						dataType: 'json',
+						method: 'get',
+						success: function (data) {
+							var html = '';
+							for (var i = 0; i < data.length; i++) {
+								console.log(data[i]);
+								html += template(data[i]);
+							}
+							$('#comment').html(html);
+						},
+						error: function (err) {
+							console.error(err);
+						}
+					});
+					sendArticle.css('display', 'none');
+			},
+			error: function (err) {
+				console.error(err);
+			}
+		});
+	});
+
+	cancel.click(function () {
+		sendArticle.css('display', 'none');
+	});
+	$.ajax({
+		url: '/blogsByAjax',
+		dataType: 'json',
+		method: 'get',
+		success: function (data) {
+			var html = '';
+			for (var i = 0; i < data.length; i++) {
+				console.log(data[i]);
+				html += template(data[i]);
+			}
+			$('#comment').html(html);
+	//		sendArticle.css('display', 'none');
+		},
+		error: function (err) {
+			console.error(err);
+		}
+	});
+
+	var template = function (obj) {
+		return "<a href='/blog/"+obj.id+"'><h3 class='title2'>"+obj.article+"</h3><div class='content'><p>"+obj.content+"</p></div></a>"+ (obj.author==obj.user ? "<a href='/blog/"+obj.id+"/del'>删除</a>" : "");
+	};
+</script>

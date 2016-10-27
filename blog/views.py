@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from django import forms
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -36,6 +38,23 @@ def blogs(request):
     return HttpResponse(template.render(context, request))
 
 
+# ajax 查看全部博客
+def blogsByAjax(request):
+    username = request.session.get('username')
+    article_list = Article.objects.order_by('-pub_date')
+    template = loader.get_template('blog/blogs.html')
+    data = []
+    for article in article_list:
+        data.append({
+            'id': article.id,
+            'article': article.article_title,
+            'content': article.article_text,
+            'author': article.author,
+            'user': username
+        })
+    return HttpResponse(json.dumps(data, ensure_ascii=False))
+
+
 # 添加博客文章
 class ArticleFormForAddArticle(forms.Form):
     article_title = forms.CharField(max_length=200)
@@ -57,10 +76,25 @@ def addArticle(request):
             articleSQL.save()
             return HttpResponseRedirect('/blog')
         else:
-            return render(request, 'blog/addArticle.html', {'uf':form})       
+            return render(request, 'blog/addArticle.html', {'uf':form})
     else:
         form = ArticleFormForAddArticle()
     return render(request, 'blog/addArticle.html', {'uf':form})
+
+
+# ajax 发帖
+def addArticleByAjax(request):
+    if not request.session.get('username'):
+        return HttpResponseRedirect('/login') 
+    if request.method == 'POST':
+        articleSQL = Article()
+        articleSQL.article_title = request.POST.get('article_title')
+        articleSQL.article_text = request.POST.get('article_text')
+        articleSQL.author = request.session.get('username')
+        articleSQL.pub_date = datetime.now()
+        articleSQL.save()
+        return HttpResponse('1')
+    return HttpResponse('0')
 
 
 # 评论相关的表单
