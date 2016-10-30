@@ -42,7 +42,6 @@ def blogs(request):
 def blogsByAjax(request):
     username = request.session.get('username')
     article_list = Article.objects.order_by('-pub_date')
-    template = loader.get_template('blog/blogs.html')
     data = []
     for article in article_list:
         data.append({
@@ -105,20 +104,49 @@ class CommentForm(forms.Form):
 # 博文详细内容及评论/添加评论的表单
 def showArticle(request, article_id):
     article = Article.objects.get(id=article_id)
-    comment_all = Comment.objects.filter(article=article)
+    # comment_all = Comment.objects.filter(article=article)
+    # if request.method == 'POST':
+    #     form = CommentForm(request.POST)
+    #     if not request.session.get('username'):
+    #         return HttpResponseRedirect('/login') 
+    #     if form.is_valid():
+    #         commentSQL = Comment()
+    #         commentSQL.article = article
+    #         commentSQL.comment_text = form.cleaned_data['comment_text']
+    #         commentSQL.comment_author = request.session.get('username')
+    #         commentSQL.save()
+    # else:
+    #     form = CommentForm()
+    return render(request, 'blog/showArticle.html', {'article':article})
+
+
+# 请求所有评论
+def commentsByAjax(request, article_id):
+    article = Article.objects.get(id=article_id)
+    comment_list = Comment.objects.filter(article=article)
+    data = []
+    username = request.session.get('username', 'visitor')
+    for comment in comment_list:
+        data.append({
+            'content': comment.comment_text,
+            'author': comment.comment_author,
+            'user': username
+        })
+    return HttpResponse(json.dumps(data, ensure_ascii=False))
+
+
+def addCommentsByAjax(request, article_id):
+    article = Article.objects.get(id=article_id)
+    if not request.session.get('username'):
+        return HttpResponseRedirect('/login') 
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if not request.session.get('username'):
-            return HttpResponseRedirect('/login') 
-        if form.is_valid():
-            commentSQL = Comment()
-            commentSQL.article = article
-            commentSQL.comment_text = form.cleaned_data['comment_text']
-            commentSQL.comment_author = request.session.get('username')
-            commentSQL.save()
-    else:
-        form = CommentForm()
-    return render(request, 'blog/showArticle.html', {'uf':form, 'article':article, 'comment_all':comment_all})
+        commentSQL = Comment()
+        commentSQL.article = article
+        commentSQL.comment_text = request.POST.get('comment_text')
+        commentSQL.comment_author = request.session.get('username')
+        commentSQL.save()
+        return HttpResponse('1')
+    return HttpResponse('0')
 
 
 # 删除博文
@@ -284,34 +312,6 @@ def findPassword(request):
         uf = UserFormForFindPasswordUser()
     return render(request,'blog/findPassword.html', {'uf':uf})
 
-def findPassword2(request):
-    if request.method == 'POST':
-        form = UserFormForChange(request.POST)
-        if form.is_valid():
-            password = form.cleaned_data['password']
-            newPassword = form.cleaned_data['newPassword']
-            newPasswordAgain = form.cleaned_data['newPasswordAgain']
-            try:
-                userSQL = User.objects.get(username=username, password=password)
-            except User.DoesNotExist:
-                error = '密码错误'
-                return render(request, 'blog/finPassword.html', {'username':username, 'info':error})
-            else:
-                if newPassword == newPasswordAgain:
-                    if password != newPassword:
-                        userSQL.password = newPassword
-                        userSQL.save()
-                        info = '修改密码成功'
-                    else:
-                        info = '输入的密码和原密码一致'
-                else:
-                    info = '两次密码输入不相同'
-                return render(request, 'blog/findPassword.html', {'username':username, 'info':info})
-        else:
-            return render(request, 'blog/findPassword.html', {'username':username, 'uf':form})
-    else:
-        uf = UserFormForFindPasswordUser()
-    return render(request,'blog/findPassword.html', {'uf':uf})
 
 # 修改密码
 def changePassword(request):

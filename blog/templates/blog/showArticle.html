@@ -5,6 +5,7 @@
 	<title>Y_BLOG</title>
   	<link rel="stylesheet" href="../../static/css/zerogrid.css">
 	<link rel="stylesheet" href="../../static/css/style.css">    
+	<script type="text/javascript" src="../../static/js/jquery-2.1.4.min.js" ></script>
 </head>
 <body>
 <div class="wrap-body">
@@ -14,16 +15,16 @@
 			<div class="wrap-nav" style="">
 				<div class="menu">
 					<ul>
-				        {% if user == 'visitor' %}
-						<li><a href="login">登陆</a></li>
-						<li><a href="register">注册</a></li>
+					{% if user == 'visitor' %}
+						<li><a href="../../login">登陆</a></li>
+						<li><a href="../../register">注册</a></li>
+						<li><a href="../../findPassword">找回密码</a></li>
 					{% else %}
-						<li><a href="#">&nbsp;</a></li>
-						<li><a href="/blog/addArticle">发帖</a></li>
+						<li><a href="../../logout">登出</a></li>
+						<li><a href="../../changePassword">修改密码</a></li>
+						<li><a href="../../addArticle">发帖</a></li>
 					{% endif %}
-					        <li><a href="/">Home</a></li>
-						<li><a href="#">&nbsp;</a></li>
-					<p>注：登陆后才能发帖</p>
+					    <li><a href="/">Home</a></li>
 					</ul>
 				</div>
 			</div>
@@ -45,24 +46,18 @@
 								    <div style="position:relative;left:360px;"><a href="/">返回首页</a></div>
 								    <div>
 										<h2>comment</h2>
-										<ul>
-											{% for comment in comment_all %}
-											<li>
-												评论内容：{{ comment.comment_text }}<br/>
-												作者：{{ comment.comment_author }}<br/>
-											</li>
-											{% endfor %}
-										</ul>
+										<ul id="commentMain"></ul>
 									</div>
 									<br/>
-									<form action="" method="post" id="CommentForm" >
+									<div>
 										<h2>add comment</h2>
 										comment_text：<input type="text" name="comment_text" id="comment_text" placeholder="请输入评论..." autofocus>
 										<br/><br/>
 										{{uf.errors}}
 										<br/>
-										<button type="submit">评论</button>
-									</form>
+										<button id='comment_submit'>评论</button>
+										<!-- <button id='comment_submit' type="submit">评论</button> -->
+									</div>
 								</div>
 							</article>
 						</div>
@@ -123,3 +118,64 @@
 </div>
 </body>
 </html>	
+<script>
+	var article_id_num = window.location.pathname.split('/')[2];
+	$('#comment_submit').click(function () {
+		// 添加评论
+		var comment_text = $('#comment_text').val();
+		if (!comment_text) {
+			alert('表单输入不完整');
+			return ;
+		}
+		$.ajax({
+			url: '/addCommentsByAjax/' + article_id_num + '/',
+			method: 'post',
+			data: {
+				comment_text: comment_text,
+			},
+			success: function () {
+				// 清空评论框
+				$('#comment_text').val('');
+				// 重新加载评论
+				$.ajax({
+					url: '/commentsByAjax/' + article_id_num,
+					dataType: 'json',
+					method: 'get',
+					success: function (data) {
+						var html = '';
+						for (var i = 0; i < data.length; i++) {
+							html += comment_template(data[i]);
+						}
+						$('#commentMain').html(html);
+					},
+					errors: function (err) {
+						console.error(err);
+					}
+				});
+			},
+			errors: function (err) {
+				console.error(err);
+			}
+		});
+	});
+	// 请求评论列表
+	$.ajax({
+		url: '/commentsByAjax/' + article_id_num,
+		dataType: 'json',
+		method: 'get',
+		success: function (data) {
+			var html = '';
+			for (var i = 0; i < data.length; i++) {
+				html += comment_template(data[i]);
+			}
+			$('#commentMain').html(html);
+		},
+		errors: function (err) {
+			console.error(err);
+		}
+	});
+	// 评论模板
+	var comment_template = function (obj) {
+		return "<li>评论内容：" + obj.content + "<br/>作者：" + obj.author + "</li>"
+	};
+</script>
