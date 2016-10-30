@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from blog.views import login,register,changePassword,logout,about_me
+from blog.views import login,register,findPassword,changePassword,logout,about_me
 urlpatterns = [
     url(r'^login/$', login),
     url(r'^register/$', register),
     url(r'^changePassword/$', changePassword),
+    url(r'^findPassword/$', findPassword),
+    url(r'^findPassword2/$', findPassword),
     url(r'^logout/$', logout),
     url(r'', include('blog.urls')),
     url(r'^admin/', admin.site.urls),

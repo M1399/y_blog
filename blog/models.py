@@ -17,3 +17,9 @@ class Comment(models.Model):
 class User(models.Model):
 	username = models.CharField(max_length=200)
 	password = models.CharField(max_length=200)
+	passwordQ1 = models.CharField(max_length=200)
+	passwordA1 = models.CharField(max_length=200)
+	passwordQ2 = models.CharField(max_length=200)
+	passwordA2 = models.CharField(max_length=200)
+	passwordQ3 = models.CharField(max_length=200)
+	passwordA3 = models.CharField(max_length=200)

@@ -21,9 +21,9 @@ class CommentInline(admin.ModelAdmin):
 admin.site.register(Comment, CommentInline)
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'password')
+    list_display = ('username', 'password', 'passwordQ1', 'passwordA1', 'passwordQ2', 'passwordA2', 'passwordQ3', 'passwordA3')
     search_fields = ['article_title']
     fieldsets = [
-        (None, {'fields': ['username', 'password']}),
+        (None, {'fields': ['username', 'password', 'passwordQ1', 'passwordA1', 'passwordQ2', 'passwordA2', 'passwordQ3', 'passwordA3']}),
     ]
 admin.site.register(User, UserAdmin)

@@ -143,7 +143,25 @@ class UserForm(forms.Form):
 class UserFormForRegister(forms.Form):
     username = forms.CharField(max_length=200)
     password = forms.CharField(max_length=200)
-    passwordAgain = forms.CharField(max_length=200)   
+    passwordAgain = forms.CharField(max_length=200)
+    passwordQ1 = forms.CharField(max_length=200)
+    passwordA1 = forms.CharField(max_length=200)
+    passwordQ2 = forms.CharField(max_length=200)
+    passwordA2 = forms.CharField(max_length=200)
+    passwordQ3 = forms.CharField(max_length=200)
+    passwordA3 = forms.CharField(max_length=200)
+
+
+class UserFormForFindPassword(forms.Form):
+    passwordA1 = forms.CharField(max_length=200)
+    passwordA2 = forms.CharField(max_length=200)
+    passwordA3 = forms.CharField(max_length=200)
+    newPassword = forms.CharField(max_length=200)
+    newPasswordAgain = forms.CharField(max_length=200) 
+
+
+class UserFormForFindPasswordUser(forms.Form):
+    findUser = forms.CharField(max_length=200)
 
 
 class UserFormForChange(forms.Form):
@@ -186,6 +204,12 @@ def register(request):
                 userSQL = User()
                 userSQL.username = username
                 userSQL.password = password
+                userSQL.passwordQ1 = form.cleaned_data['passwordQ1']
+                userSQL.passwordA1 = form.cleaned_data['passwordA1']
+                userSQL.passwordQ2 = form.cleaned_data['passwordQ2']
+                userSQL.passwordA2 = form.cleaned_data['passwordA2']
+                userSQL.passwordQ3 = form.cleaned_data['passwordQ3']
+                userSQL.passwordA3 = form.cleaned_data['passwordA3']
                 userSQL.save()
                 request.session['username'] = username
                 return HttpResponseRedirect('/blog')
@@ -198,6 +222,96 @@ def register(request):
         uf = UserFormForRegister()
     return render(request,'blog/register.html', {'uf':uf})
 
+
+# 找回密码
+def findPassword(request):
+    if request.method == 'POST' and request.POST.get('findUser'):
+        form = UserFormForFindPasswordUser(request.POST)
+        if form.is_valid():
+            findUser = form.cleaned_data['findUser']
+            try:
+                userSQL = User.objects.get(username=findUser)
+            except User.DoesNotExist:
+                error = '用户名错误'
+                return render(request, 'blog/findPassword.html', {'info':error})
+            else:
+                Q1 = userSQL.passwordQ1
+                Q2 = userSQL.passwordQ2
+                Q3 = userSQL.passwordQ3
+                request.session['findUser'] = findUser
+                return render(request, 'blog/findPassword.html', {'findUser':findUser, 'Q1':Q1, 'Q2':Q2, 'Q3':Q3})
+        else:
+            return render(request, 'blog/findPassword.html', {'uf':form})
+    elif request.method == 'POST':
+        form = UserFormForFindPassword(request.POST)
+        findUser = request.session.get('findUser')
+        try:
+            userSQL = User.objects.get(username=findUser)
+        except User.DoesNotExist:
+            error = '用户名错误'
+            return render(request, 'blog/findPassword.html', {'info':error})
+        Q1 = userSQL.passwordQ1
+        Q2 = userSQL.passwordQ2
+        Q3 = userSQL.passwordQ3
+        if form.is_valid():
+            A1 = form.cleaned_data['passwordA1']
+            A2 = form.cleaned_data['passwordA2']
+            A3 = form.cleaned_data['passwordA3']
+
+            if A1 != userSQL.passwordA1:
+                error = '答案1错误'
+                return render(request, 'blog/findPassword.html', {'info':error,'findUser':findUser, 'Q1':Q1, 'Q2':Q2, 'Q3':Q3})
+            if A2 != userSQL.passwordA2:
+                error = '答案2错误'
+                return render(request, 'blog/findPassword.html', {'info':error,'findUser':findUser, 'Q1':Q1, 'Q2':Q2, 'Q3':Q3})
+            if A3 != userSQL.passwordA3:
+                error = '答案3错误'
+                return render(request, 'blog/findPassword.html', {'info':error,'findUser':findUser, 'Q1':Q1, 'Q2':Q2, 'Q3':Q3})
+            newPassword = form.cleaned_data['newPassword']
+            newPasswordAgain = form.cleaned_data['newPasswordAgain']
+            if newPassword != newPasswordAgain:
+                error = '两次密码输入不一致'
+                return render(request, 'blog/findPassword.html', {'info':error,'findUser':findUser, 'Q1':Q1, 'Q2':Q2, 'Q3':Q3})
+            elif newPassword == newPasswordAgain:
+                userSQL.password = newPassword
+                userSQL.save()
+                request.session['username'] = findUser
+                return HttpResponseRedirect('/blog')
+        else:
+            form = UserFormForFindPassword(request.POST)
+            return render(request, 'blog/findPassword.html', {'uf':form, 'findUser':findUser, 'Q1':Q1, 'Q2':Q2, 'Q3':Q3})
+    else:
+        uf = UserFormForFindPasswordUser()
+    return render(request,'blog/findPassword.html', {'uf':uf})
+
+def findPassword2(request):
+    if request.method == 'POST':
+        form = UserFormForChange(request.POST)
+        if form.is_valid():
+            password = form.cleaned_data['password']
+            newPassword = form.cleaned_data['newPassword']
+            newPasswordAgain = form.cleaned_data['newPasswordAgain']
+            try:
+                userSQL = User.objects.get(username=username, password=password)
+            except User.DoesNotExist:
+                error = '密码错误'
+                return render(request, 'blog/finPassword.html', {'username':username, 'info':error})
+            else:
+                if newPassword == newPasswordAgain:
+                    if password != newPassword:
+                        userSQL.password = newPassword
+                        userSQL.save()
+                        info = '修改密码成功'
+                    else:
+                        info = '输入的密码和原密码一致'
+                else:
+                    info = '两次密码输入不相同'
+                return render(request, 'blog/findPassword.html', {'username':username, 'info':info})
+        else:
+            return render(request, 'blog/findPassword.html', {'username':username, 'uf':form})
+    else:
+        uf = UserFormForFindPasswordUser()
+    return render(request,'blog/findPassword.html', {'uf':uf})
 
 # 修改密码
 def changePassword(request):
