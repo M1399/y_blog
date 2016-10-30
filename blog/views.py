@@ -353,7 +353,7 @@ def logout(request):
         del request.session['username']
     return render(request, 'blog/logout.html')
 
-#aboutme
+# aboutme
 def about_me(request) :
     return render(request, 'blog/aboutme.html')
 

@@ -57,6 +57,8 @@
 								</div>
 								<div id="comment">
 								</div>
+								<div id="comment_page">
+								</div>
 							</article>				
 						</div>
 					</div>
@@ -64,7 +66,6 @@
 			</div>
 			<div id="sidebar" class="col-1-3">
 				<div class="wrap-col">
-
 					<div class="box">
 						<div class="heading"><h4 class="title"><a href="/blogs">归档</a></h4></div>
 					</div>
@@ -105,7 +106,7 @@
 			</div>
 			<div class="col-1-4">
 				<div class="wrap-col">
-					<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">Githube</a></h4></div>
+					<div class="heading"><h4 class="title"><a href="https://github.com/M1399/blog_q">Github</a></h4></div>
 				</div>
 			</div>
 		</div>
@@ -144,24 +145,64 @@
 				article_text: content
 			},
 			success: function (data) {
-				console.log(data);
-					$.ajax({
-						url: '/blogsByAjax',
-						dataType: 'json',
-						method: 'get',
-						success: function (data) {
-							var html = '';
+				$.ajax({
+					url: '/blogsByAjax',
+					dataType: 'json',
+					method: 'get',
+					success: function (data) {
+						var html = '';
+						// 渲染页面
+						if (data.length <= 3) { 
 							for (var i = 0; i < data.length; i++) {
-								console.log(data[i]);
 								html += template(data[i]);
 							}
 							$('#comment').html(html);
-						},
-						error: function (err) {
-							console.error(err);
 						}
-					});
-					sendArticle.css('display', 'none');
+						else {
+							// 大于3条，分页
+							for (var i = 0; i < 3; i++) {
+								html += template(data[i]);
+							}
+							$('#comment').html(html);
+							var page = parseInt(data.length / 3);
+							if (data.length % 3) {
+								page += 1;
+							}
+							// 渲染分页的按钮
+							var page_button_html = '';
+							for (var i = 1; i <= page; i++) {
+								page_button_html += template_button(i);
+							};
+							$('#comment_page').html(page_button_html);
+							// 分页按钮点击事件
+							$('.page_button:first-child').css('color', 'red');
+							$('.page_button').click(function (event) {
+								$('.page_button').css('color', 'black');
+								$(this).css('color', 'red');
+								var page_num = 1;
+								page_num = $(this).val();
+								// 点击分页后，重新渲染页面
+								// 如果是最后一页，加载剩下的全部
+								html = '';
+								if(page_num != page) {
+									for (var i = page_num * 3 - 3; i < page_num * 3; i++) {
+										html += template(data[i]);
+									}
+									$('#comment').html(html);
+								} else {
+									for (var i = page_num * 3 - 3; i < data.length; i++) {
+										html += template(data[i]);
+									}
+									$('#comment').html(html);
+								}
+							});
+						}
+					},
+					error: function (err) {
+						console.error(err);
+					}
+				});
+				sendArticle.css('display', 'none');
 			},
 			error: function (err) {
 				console.error(err);
@@ -178,12 +219,52 @@
 		method: 'get',
 		success: function (data) {
 			var html = '';
-			for (var i = 0; i < data.length; i++) {
-				console.log(data[i]);
-				html += template(data[i]);
+			// 渲染页面
+			if (data.length <= 3) { 
+				for (var i = 0; i < data.length; i++) {
+					html += template(data[i]);
+				}
+				$('#comment').html(html);
 			}
-			$('#comment').html(html);
-	//		sendArticle.css('display', 'none');
+			else {
+				// 大于3条，分页
+				for (var i = 0; i < 3; i++) {
+					html += template(data[i]);
+				}
+				$('#comment').html(html);
+				var page = parseInt(data.length / 3);
+				if (data.length % 3) {
+					page += 1;
+				}
+				// 渲染分页的按钮
+				var page_button_html = '';
+				for (var i = 1; i <= page; i++) {
+					page_button_html += template_button(i);
+				};
+				$('#comment_page').html(page_button_html);
+				// 分页按钮点击事件
+				$('.page_button:first-child').css('color', 'red');
+				$('.page_button').click(function (event) {
+					$('.page_button').css('color', 'black');
+					$(this).css('color', 'red');
+					var page_num = 1;
+					page_num = $(this).val();
+					// 点击分页后，重新渲染页面
+					// 如果是最后一页，加载剩下的全部
+					html = '';
+					if(page_num != page) {
+						for (var i = page_num * 3 - 3; i < page_num * 3; i++) {
+							html += template(data[i]);
+						}
+						$('#comment').html(html);
+					} else {
+						for (var i = page_num * 3 - 3; i < data.length; i++) {
+							html += template(data[i]);
+						}
+						$('#comment').html(html);
+					}
+				});
+			}
 		},
 		error: function (err) {
 			console.error(err);
@@ -191,6 +272,9 @@
 	});
 
 	var template = function (obj) {
-		return "<a href='/blog/"+obj.id+"'><h3 class='title2'>"+obj.article+"</h3><div class='content'><p>"+obj.content+"</p></div></a>"+ (obj.author==obj.user ? "<a href='/blog/"+obj.id+"/del'>删除</a>" : "");
+		return "<span class='blog_list'><a href='/blog/"+obj.id+"'><h3 class='title2'>"+obj.article+"</h3><div class='content'><p>"+obj.content+"</p></div></a>"+ (obj.author==obj.user ? "<a href='/blog/"+obj.id+"/del'>删除</a>" : "</span>");
+	};
+	var template_button = function (num) {
+		return "<button class='page_button' value='" + num + "'>" + num + "</button>";
 	};
 </script>
