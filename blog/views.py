@@ -117,7 +117,9 @@ def showArticle(request, article_id):
     #         commentSQL.save()
     # else:
     #     form = CommentForm()
-    return render(request, 'blog/showArticle.html', {'article':article})
+
+    user = request.session.get('username','visitor')
+    return render(request, 'blog/showArticle.html', {'article':article, 'user':user})
 
 
 # 请求所有评论
@@ -204,7 +206,7 @@ def login(request):
         form = UserForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
-            password = form.cleaned_data['password']           
+            password = form.cleaned_data['password']
             try:
                 userSQL = User.objects.get(username=username, password=password) 
             except User.DoesNotExist:
